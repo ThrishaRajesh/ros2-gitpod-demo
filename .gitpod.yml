@@ -1,1 +1,25 @@
+# .gitpod.yml
+image:
+  file: .gitpod.Dockerfile
+
+ports:
+  - port: 6080
+    onOpen: open-preview
+
+tasks:
+  - init: |
+      # source system ROS (inside container)
+      source /opt/ros/humble/setup.bash
+      # create workspace and fetch example packages (TurtleBot3 demo)
+      mkdir -p /workspace/ros2_ws/src
+      cd /workspace/ros2_ws/src
+      git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3.git
+      git clone -b humble-devel https://github.com/ROBOTIS-GIT/turtlebot3_simulations.git
+      cd /workspace/ros2_ws
+      colcon build --symlink-install
+  - command: |
+      # start noVNC / X desktop via supervisor script
+      /usr/local/bin/start-novnc.sh
+      # open a shell for you (Gitpod will give a terminal)
+      bash
 
